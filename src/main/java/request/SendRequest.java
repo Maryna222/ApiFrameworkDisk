@@ -1,21 +1,21 @@
 package request;
 
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import response.EmptyResponseInDeletedFolder;
+import lombok.SneakyThrows;
 import utils.Log;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 import static io.restassured.RestAssured.given;
 
 public class SendRequest {
-    public <T> T getRequest(String url, String token, Class<T> classResponse, String folderName) {
+    public synchronized <T> T getRequest(String url, String token, Class<T> classResponse, String folderName) {
         Log.info("Start getRequest method");
         return
                 createdHeader(token)
                         .when()
-                        .log().uri()
                         .queryParam("path", folderName)
                         .get(url)
                         .then()
@@ -25,7 +25,46 @@ public class SendRequest {
                         .extract().response().as(classResponse);
     }
 
-    public <T> T putRequest(String url, String token, Class<T> classResponse, String folderName) {
+    public synchronized <T> T getTrashRequest(String url, String token, Class<T> classResponse) {
+        Log.info("Start getTrashRequest method");
+        return
+                createdHeader(token)
+                        .when()
+                        .get(url)
+                        .then()
+                        .log().status()
+                        .log().headers()
+                        .log().body()
+                        .extract().response().as(classResponse);
+    }
+
+    public synchronized int getTrashStatusRequest(String url, String token) {
+        Log.info("Start getTrashRequest method");
+        return
+                createdHeader(token)
+                        .when()
+                        .get(url)
+                        .then()
+                        .log().status()
+                        .log().headers()
+                        .log().body()
+                        .extract().response().statusCode();
+    }
+
+//    public synchronized <T> T getTrashContentRequest(String url, String token, Class<T> classResponse) {
+//        Log.info("Start get Trash Content Request method");
+//        return
+//                createdHeader(token)
+//                        .when()
+//                        .get(url)
+//                        .then()
+//                        .log().status()
+//                        .log().headers()
+//                        .log().body()
+//                        .extract().response().as(classResponse);
+//    }
+
+    public synchronized <T> T putRequest(String url, String token, Class<T> classResponse, String folderName) {
         Log.info("Start putRequest method");
         return
                 createdHeader(token)
@@ -39,14 +78,28 @@ public class SendRequest {
                         .extract().response().as(classResponse);
     }
 
-    public <T> T putRequestWithAttachments(String url, String token, Class<T> classResponse, String filePath, String fileName) {
+
+    public synchronized int putRequestWithAttachments(String url, String token, File filePath, String fileName) {
         Log.info("Start putRequest method");
         return
                 createdHeader(token)
+                        .multiPart(fileName, filePath,"text/plain")
+                        .contentType("multipart/text/plain")
                         .when()
-                        .multiPart(fileName, new File("src\\main\\resources\\Screen_23.jpg"))
-                        //.contentType("image/jpeg")
                         .put(url)
+                        .then()
+                        .log().status()
+                        .log().headers()
+                        .log().body()
+                        .extract().response().statusCode();
+    }
+
+    public synchronized <T> T deleteTrashRequest(String url, String token, Class<T> classResponse) {
+        Log.info("Start delete trash method");
+        return
+                createdHeader(token)
+                        .when()
+                        .delete(url)
                         .then()
                         .log().status()
                         .log().headers()
@@ -54,7 +107,7 @@ public class SendRequest {
                         .extract().response().as(classResponse);
     }
 
-    public Integer deleteRequest(String url, String token, String offOn) {
+    public synchronized Integer deleteRequest(String url, String token, String offOn) {
         Log.info("Start deleteRequest method");
         return
                 createdHeader(token)
@@ -64,8 +117,6 @@ public class SendRequest {
                         .then()
                         .log().status()
                         .extract().statusCode();
-
-
     }
 
     private RequestSpecification createdHeader(String token) {
