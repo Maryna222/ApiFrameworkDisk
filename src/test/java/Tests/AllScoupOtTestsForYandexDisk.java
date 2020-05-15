@@ -15,16 +15,13 @@ import utils.Log;
 
 import java.io.*;
 
-import static io.restassured.RestAssured.given;
-import static org.testng.Assert.assertEquals;
-
 //@Listeners({TestListener.class})
 @Epic("Epic: Pull of tests for yansex.disk")
 @Feature("Feature 1: check that created folder was deleted")
 public class AllScoupOtTestsForYandexDisk {
 
     @Test(description = "Test 1: Create, delete new folder and check it")
-    @Description("Create and delete new folder")
+    @Description("Test 1: Create and delete new folder")
     public void createAndDeleteFolder() {
         Log.info("********************************************************************");
         Log.info("Test 1: Create, delete new folder and check it ");
@@ -43,13 +40,13 @@ public class AllScoupOtTestsForYandexDisk {
 
 
     @Test(description = "Test 2: Create, delete file in the folder and check it")
-    @Description("Create and delete file in the folder")
+    @Description("Test 2: Create and delete file in the folder")
     public void createAndDeleteFileInFolder() {
         Log.info("********************************************************************");
         Log.info("Test 2: Create, delete file in folder and check it ");
         Log.info("********************************************************************");
         String folderName = "Test17t"+Math.random()*40;
-        //System.out.println(folderName);
+
         String fileName = "autotest.txt";
 
         Log.info("************************* Step 1: Create folder **********************************");
@@ -76,7 +73,7 @@ public class AllScoupOtTestsForYandexDisk {
     }
 
     @Test(description = "Test 3: Restore created file from trash to the folder and check it")
-    @Description("Restore created file from trash")
+    @Description("Test 3: Restore created file from trash")
     public void restoreFileFromTrashToFolder() {
         Log.info("********************************************************************");
         Log.info("Test 3: Restore created file from trash to the folder and check it");
@@ -112,7 +109,7 @@ public class AllScoupOtTestsForYandexDisk {
     }
 
     @Test(description = "Test 4: Clear trash and check it")
-    @Description("Restore created file from trash")
+    @Description("Test 4: Restore created file from trash")
     public void clearTrash() throws InterruptedException {
         Log.info("********************************************************************");
         Log.info("Test 4: Clear trash and check it");
@@ -158,7 +155,7 @@ public class AllScoupOtTestsForYandexDisk {
 
 
     @Test(description = "Test 5: Get metadata about folder and check it")
-    @Description("Get metadata about folder")
+    @Description("Test 5: Get metadata about folder")
     public void getFolderMetaData() throws InterruptedException {
         Log.info("********************************************************************");
         Log.info("Test 5: Get metadata about folder and check it");
@@ -197,7 +194,7 @@ public class AllScoupOtTestsForYandexDisk {
     }
 
     @Test(description = "Test 6: Check the size of folder files")
-    @Description("Check the size of folder files")
+    @Description("Test 6: Check the size of folder files")
     public void countFolderDataSize() throws InterruptedException {
         Log.info("********************************************************************");
         Log.info("Test 6: Check the size of folder files");

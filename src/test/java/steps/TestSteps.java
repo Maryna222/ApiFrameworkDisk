@@ -3,7 +3,7 @@ package steps;
 import checks.AssertChecks;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
-import org.testng.Assert;
+
 import request.SendRequest;
 import response.GetUrlForUploadFileResponse;
 import response.NotFoundObject;
@@ -61,6 +61,7 @@ public class TestSteps {
 
     @Step("Uploading file step")
     public void uploadFile(String url, String method, File file, String fileName) {
+        Log.info("Put request method for uploading file with file ");
         int getResponseStatus;
         getResponseStatus = sendRequest.putRequestWithAttachments(url, TOKEN, file, fileName);
 
@@ -110,9 +111,9 @@ public class TestSteps {
         checks.checkDeletedNotEmptyFolder(status);
     }
 
-    @Step("Sent not empty object to the trash step")
+    @Step("Clear trash step")
     public BaseObjectResponse clearTrashMethod() throws InterruptedException {
-        Log.info("Delete request for sent not empty object to trash");
+        Log.info("Delete request for clear the trash");
         BaseObjectResponse operationResponse;
         int statusTrash;
 
@@ -144,9 +145,9 @@ public class TestSteps {
             checks.checkStatus(getResponseUpdatedStatus, method);
         }
     }
-    @Step("Request that check total count in the trash")
+    @Step("Request that check is empty trash")
     public TrashResponse checkEmptyTrashMethod() {
-        Log.info("Request that check total count in the trash");
+        Log.info("GET request that check is empty trash");
         TrashResponse countTotalItemsInTrash;
         countTotalItemsInTrash = sendRequest.getTrashRequest(BASE_TRASH_URL, TOKEN, TrashResponse.class);
 
@@ -154,9 +155,9 @@ public class TestSteps {
         return countTotalItemsInTrash;
     }
 
-    @Step("Restore object from trash step")
+    @Step("Get object meta data with subfolder step")
     public MetaDataResponse getObjectMetadata( String folderName, String subFolderName, String fileName ) {
-        Log.info("PUT request for restore file from trash");
+        Log.info("Get request for get object meta data");
 
         MetaDataResponse metaDataResponse;
         metaDataResponse = sendRequest.getRequest(BASE_DISK_URL, TOKEN, MetaDataResponse.class, folderName);
@@ -165,9 +166,9 @@ public class TestSteps {
         return metaDataResponse;
     }
 
-    @Step("Get request for getting the metadata from object step")
+    @Step("Get request for getting the metadata from object without subfolder step")
     public Items getObjectMetadataWithOutSubfolder(String folderName, String fileName ) {
-        Log.info("Get request for getting the metadata from object");
+        Log.info("Get request for getting the metadata from object without subfolder");
 
         Items metaDataResponse;
         metaDataResponse = sendRequest.getObjectMetadataRequest(BASE_DISK_URL, TOKEN, Items.class, folderName+ "/" + fileName);
@@ -177,13 +178,6 @@ public class TestSteps {
         return metaDataResponse;
     }
 
-    @Step("Restore object from trash step")
-    public void getDataAboutObjectMethod(String folderName){
-        NotFoundObject notFoundObject;
-        notFoundObject = sendRequest.getRequest(BASE_DISK_URL, TOKEN, NotFoundObject.class, folderName);
-
-        checks.checkNotFoundAnsver(notFoundObject);
-    }
     @Step("Get data from not empty trash")
     public MetaDataResponse getTrashMetadata() {
         Log.info("Get request data from not empty trash");
@@ -196,7 +190,7 @@ public class TestSteps {
 
     @Step("Create folder with check empty trash step")
     public BaseObjectResponse createFolderWhenEmptyTrashMethod(String folderName) {
-        Log.info("PUT request for create folder");
+        Log.info("PUT request for create folder with check that trash is empty");
         BaseObjectResponse makeFolderActualResponse;
         Integer expectedTotalCount = 0;
 
@@ -241,11 +235,6 @@ public class TestSteps {
 
 
         checks.checkSizeSumInTnTreshMetadata(currentTrashSumm, expectedSepareteSummSizeOfFiles);
-
-
-
-
-
     }
 
 

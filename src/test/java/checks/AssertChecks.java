@@ -6,13 +6,10 @@ import response.GetUrlForUploadFileResponse;
 import response.NotFoundObject;
 import response.OperationStatusResponse;
 import response.BaseObjectResponse;
-import response.metaData.Item;
 import response.metaData.Items;
 import response.metaData.MetaDataResponse;
 import response.trash.TrashResponse;
 import utils.Log;
-
-import static io.restassured.RestAssured.given;
 
 public class AssertChecks {
     int expectedStatus204 = 204;
@@ -27,9 +24,6 @@ public class AssertChecks {
     Integer expectedTotal = 0;
     Boolean result = false;
 
-
-
-
     /* Check Folder Creation*/
     public void checkFolderCreation(BaseObjectResponse actual, String url, String folderName) {
 
@@ -42,7 +36,6 @@ public class AssertChecks {
     }
 
     public void checkDeletedFolder(int result){
-        //System.out.println(" --------------- "+ result +" --------------- ");
         Assert.assertEquals(result, expectedStatus204, "Expected status is not 204");
 
         Log.info("The get correct status for operation");
@@ -58,7 +51,6 @@ public class AssertChecks {
     }
 
     public void checkUploadedFile(int result){
-        //System.out.println(" --------------- "+ result +" --------------- ");
         Assert.assertEquals(result, expectedStatus201, "Expected status is not 201");
 
         Log.info("The file successfully uploaded");
@@ -76,15 +68,13 @@ public class AssertChecks {
 
 
     public void checkDeletedNotEmptyFolder(int result){
-        //System.out.println(" --------------- "+ result +" --------------- ");
         Assert.assertEquals(result, expectedStatus202, "Expected status is not 202");
 
         Log.info("The get correct status for operation");
     }
 
     public void checkStatusDeletedFile(int result){
-        //System.out.println(" --------------- "+ result +" --------------- ");
-        Assert.assertEquals(result, expectedStatus204, "Expected status is not 202");
+        Assert.assertEquals(result, expectedStatus204, "Expected status is not 204");
 
         Log.info("The get correct status for operation");
     }
@@ -124,24 +114,6 @@ public class AssertChecks {
         softAssert.assertEquals(actual.getEmbedded().getItems().get(1).getType(), expectedFile,"Expected metaType is not equal actual");
         softAssert.assertAll();
         Log.info("All keys from response object are correct when get metadata of object");
-    }
-
-    public void checkObjectMetadataWithOutSubfolder (MetaDataResponse actual, String folderName, String fileName){
-
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(actual.getName(), folderName, "Expected folderName is not equal actual");
-        softAssert.assertEquals(actual.getEmbedded().getItems().get(0).getName(), fileName,"Expected fileName is not equal actual");
-
-        softAssert.assertEquals(actual.getType(), expectedDir, "Expected metaType is not equal actual");
-        softAssert.assertEquals(actual.getEmbedded().getItems().get(0).getType(), expectedFile,"Expected metaType is not equal actual");
-        softAssert.assertAll();
-        Log.info("All keys from response object are correct when get metadata of object");
-    }
-
-    public void checkNotFoundAnsver(NotFoundObject actual){
-        Assert.assertEquals(actual.getError(), expected404, "Expected total is not equal actual");
-
-        Log.info("All keys from response object are correct when was deleteted and not found");
     }
 
     public void checkDirectObjectMetadata (Items actual, String fileName){
