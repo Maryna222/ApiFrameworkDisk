@@ -4,15 +4,7 @@ import java.util.*;
 
 import com.fasterxml.jackson.annotation.*;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "sort",
-    "items",
-    "limit",
-    "offset",
-    "path",
-    "total"
-})
+
 public class Embedded {
 
     @JsonProperty("sort")

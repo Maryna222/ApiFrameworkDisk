@@ -46,7 +46,7 @@ public class Item {
     @JsonProperty("type")
     private String type;
     @JsonProperty("revision")
-    private Integer revision;
+    private Long revision;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -151,12 +151,12 @@ public class Item {
     }
 
     @JsonProperty("revision")
-    public Integer getRevision() {
+    public Long getRevision() {
         return revision;
     }
 
     @JsonProperty("revision")
-    public void setRevision(Integer revision) {
+    public void setRevision(Long revision) {
         this.revision = revision;
     }
 

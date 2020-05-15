@@ -5,15 +5,12 @@ import org.testng.asserts.SoftAssert;
 import response.GetUrlForUploadFileResponse;
 import response.NotFoundObject;
 import response.OperationStatusResponse;
-import response.PutObjectResponse;
+import response.BaseObjectResponse;
 import response.metaData.Item;
-import response.metaData.ItemFolder;
 import response.metaData.Items;
 import response.metaData.MetaDataResponse;
 import response.trash.TrashResponse;
 import utils.Log;
-
-import java.util.ListIterator;
 
 import static io.restassured.RestAssured.given;
 
@@ -34,7 +31,7 @@ public class AssertChecks {
 
 
     /* Check Folder Creation*/
-    public void checkFolderCreation(PutObjectResponse actual, String url, String folderName) {
+    public void checkFolderCreation(BaseObjectResponse actual, String url, String folderName) {
 
         String href = url + "?path=disk%3A%2F" + folderName.replaceAll("\\/", "%2F");
 
@@ -67,7 +64,7 @@ public class AssertChecks {
         Log.info("The file successfully uploaded");
     }
 
-    public void checkObjectRestoring(PutObjectResponse actual, String url, String fileName, String folderName) {
+    public void checkObjectRestoring (BaseObjectResponse actual, String url, String fileName, String folderName) {
 
         String href = url + "?path=disk%3A%2F" + folderName + "%2F" + fileName;
 
@@ -77,6 +74,7 @@ public class AssertChecks {
         Log.info("All keys from response object are correct");
     }
 
+
     public void checkDeletedNotEmptyFolder(int result){
         //System.out.println(" --------------- "+ result +" --------------- ");
         Assert.assertEquals(result, expectedStatus202, "Expected status is not 202");
@@ -84,7 +82,14 @@ public class AssertChecks {
         Log.info("The get correct status for operation");
     }
 
-    public void checkResponseWhenClearTrash (PutObjectResponse actual){
+    public void checkStatusDeletedFile(int result){
+        //System.out.println(" --------------- "+ result +" --------------- ");
+        Assert.assertEquals(result, expectedStatus204, "Expected status is not 202");
+
+        Log.info("The get correct status for operation");
+    }
+
+    public void checkResponseWhenClearTrash (BaseObjectResponse actual){
 
         Assert.assertEquals(actual.getHref().isEmpty(), false, "Expected href is not equal actual");
         Assert.assertEquals(actual.getMethod(), expectedMethodGet, "Expected method is not equal actual");
@@ -121,9 +126,35 @@ public class AssertChecks {
         Log.info("All keys from response object are correct when get metadata of object");
     }
 
+    public void checkObjectMetadataWithOutSubfolder (MetaDataResponse actual, String folderName, String fileName){
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(actual.getName(), folderName, "Expected folderName is not equal actual");
+        softAssert.assertEquals(actual.getEmbedded().getItems().get(0).getName(), fileName,"Expected fileName is not equal actual");
+
+        softAssert.assertEquals(actual.getType(), expectedDir, "Expected metaType is not equal actual");
+        softAssert.assertEquals(actual.getEmbedded().getItems().get(0).getType(), expectedFile,"Expected metaType is not equal actual");
+        softAssert.assertAll();
+        Log.info("All keys from response object are correct when get metadata of object");
+    }
+
     public void checkNotFoundAnsver(NotFoundObject actual){
         Assert.assertEquals(actual.getError(), expected404, "Expected total is not equal actual");
 
         Log.info("All keys from response object are correct when was deleteted and not found");
+    }
+
+    public void checkDirectObjectMetadata (Items actual, String fileName){
+
+        Assert.assertEquals(actual.getName(), fileName,"Expected fileName is not equal actual");
+
+        Log.info("All keys from response object are correct when get metadata of object");
+    }
+
+    public void checkSizeSumInTnTreshMetadata (int actual, int expected){
+
+        Assert.assertEquals(actual , expected,"Expected sum is not equal actual");
+
+        Log.info("The actual trash sum size is equal expected");
     }
 }

@@ -25,6 +25,20 @@ public class SendRequest {
                         .extract().response().as(classResponse);
     }
 
+    public synchronized <T> T getObjectMetadataRequest(String url, String token, Class<T> classResponse, String folderName) {
+        Log.info("Start getRequest method");
+        return
+                createdHeader(token)
+                        .when()
+                        .queryParam("path", folderName)
+                        .get(url)
+                        .then()
+                        .log().status()
+                        .log().headers()
+                        .log().body()
+                        .extract().response().as(classResponse);
+    }
+
     public synchronized <T> T getTrashRequest(String url, String token, Class<T> classResponse) {
         Log.info("Start getTrashRequest method");
         return
@@ -50,19 +64,6 @@ public class SendRequest {
                         .log().body()
                         .extract().response().statusCode();
     }
-
-//    public synchronized <T> T getTrashContentRequest(String url, String token, Class<T> classResponse) {
-//        Log.info("Start get Trash Content Request method");
-//        return
-//                createdHeader(token)
-//                        .when()
-//                        .get(url)
-//                        .then()
-//                        .log().status()
-//                        .log().headers()
-//                        .log().body()
-//                        .extract().response().as(classResponse);
-//    }
 
     public synchronized <T> T putRequest(String url, String token, Class<T> classResponse, String folderName) {
         Log.info("Start putRequest method");
@@ -105,6 +106,17 @@ public class SendRequest {
                         .log().headers()
                         .log().body()
                         .extract().response().as(classResponse);
+    }
+    public synchronized Integer deleteEmptyTrashRequest(String url, String token) {
+        Log.info("Start deleteRequest method");
+        return
+                createdHeader(token)
+                        .when()
+                        .delete(url)
+                        .then()
+                        .log().status()
+                        .log().headers()
+                        .extract().statusCode();
     }
 
     public synchronized Integer deleteRequest(String url, String token, String offOn) {
